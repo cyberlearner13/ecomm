@@ -1,13 +1,9 @@
 [
   {
-    "email": "test@test.com",
+    "email": "red@cedar.com",
     "password": "password",
-    "id": "493b4b1a"
-  },
-  {
-    "email": "test@test.com",
-    "password": "password",
-    "id": "9835ef3f"
+    "id": "493b4b1a",
+    "free": "false"
   },
   {
     "email": "test@test.com",
