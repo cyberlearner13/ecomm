@@ -19,5 +19,15 @@
     "email": "red@wedding.com",
     "password": "regards",
     "id": "56d8b642"
+  },
+  {
+    "email": "sword@war.com",
+    "password": "8cc7c46fd66e17721898cfac1aa1ffa32945746fcadc69a21d8abd2f7b4fecacd235b61c938a5ca914a26332bb0d1f6d4ad6d9039f9fc47c6770b2a0bb186624.7c0bd816e624351d",
+    "id": "63709646"
+  },
+  {
+    "email": "test1@tem.com",
+    "password": "865ff089f9a3e58d010c0874c07faa71c8e79a0b4d75b77cfa60ecb7645550758041f1aec17acdc9e1d93c7443475b8c1dc8106b5bb86e3b23e44f54d578a0bf.4190f3c32357a5df",
+    "id": "511b3075"
   }
 ]

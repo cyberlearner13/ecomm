@@ -11,18 +11,18 @@ app.use(cookieSession({
     keys: ['sdfheufh9824an 9qweuY&4t837N_2421QINOI5486!@!#!//#endregion']
 }))
 
-app.get('/', (req, res) => {
+app.get('/signup', (req, res) => {
     res.send(`
         <form method="POST">
             <input name="email" type="email" placeholder="email" />
             <input name="password" type="password" placeholder="password" />
             <input name="confirmPassword" type="password" placeholder="confirmPassword" />
-            <button>Submit</button>
+            <button>Sign Up</button>
         </form>
     `);
 });
 
-app.post("/", async (req, res) => {
+app.post("/signup", async (req, res) => {
     const {
         email,
         password,
@@ -49,7 +49,43 @@ app.post("/", async (req, res) => {
 
     // Store the id of that user inside of the users cookie
     req.session.userId = user.id; // Added by cookie session
-    res.send('Done!')
-})
+    res.send('Done!');
+});
+
+app.get('/signout', (req, res) => {
+    req.session = null; // wow this is the way!
+    res.send('You are logged out');
+});
+
+app.get('/signin', (req, res) => {
+    res.send(`
+        <form method="POST">
+            <input name="email" type="email" placeholder="email" />
+            <input name="password" type="password" placeholder="password" />
+            <button>Sign In</button>
+        </form>
+    `);
+});
+
+app.post('/signin', async (req, res) => {
+    const {
+        email,
+        password
+    } = req.body;
+
+    const user = await usersRepo.getOneBy({
+        email
+    });
+
+    if (!user) return res.send('Email not found');
+
+    const validPassword = await usersRepo.comparePasswords(user.password, password);
+
+    if (!validPassword) return res.send('Password is not valid');
+
+    req.session.userId = user.id; // Added by cookie session
+
+    res.send('You are signed in');
+});
 
 app.listen('5000', () => console.log('Server started'));
