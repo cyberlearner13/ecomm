@@ -14,5 +14,10 @@
     "email": "test@test.com",
     "password": "password",
     "id": "ca552899"
+  },
+  {
+    "email": "red@wedding.com",
+    "password": "regards",
+    "id": "56d8b642"
   }
 ]
