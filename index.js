@@ -10,7 +10,7 @@ app.use(urlencoded({
 app.use(cookieSession({
     keys: ['sdfheufh9824an 9qweuY&4t837N_2421QINOI5486!@!#!//#endregion']
 }))
-
+app.use(express.static('public'))
 app.use(authRouter);
 
 app.listen('5000', () => console.log('Server started'));
