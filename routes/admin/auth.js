@@ -9,7 +9,9 @@ const signinTemplate = require('../../views/admin/auth/signin');
 const {
     requireEmail,
     requirePassword,
-    requireConfirmPassword
+    requireConfirmPassword,
+    requireEmailExists,
+    requireValidPasswordForUser
 } = require('./validators');
 
 const router = express.Router();
@@ -51,24 +53,26 @@ router.get('/signout', (req, res) => {
 });
 
 router.get('/signin', (req, res) => {
-    res.send(signinTemplate());
+    res.send(signinTemplate({}));
 });
 
-router.post('/signin', async (req, res) => {
+router.post('/signin', [requireEmailExists, requireValidPasswordForUser], async (req, res) => {
     const {
-        email,
-        password
+        email
     } = req.body;
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.send(signinTemplate({
+            req,
+            errors
+        }));
+    }
 
     const user = await usersRepo.getOneBy({
         email
     });
-
-    if (!user) return res.send('Email not found');
-
-    const validPassword = await usersRepo.comparePasswords(user.password, password);
-
-    if (!validPassword) return res.send('Password is not valid');
 
     req.session.userId = user.id; // Added by cookie session
 
