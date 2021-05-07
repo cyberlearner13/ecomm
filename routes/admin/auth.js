@@ -1,7 +1,5 @@
 const express = require('express');
-const {
-    validationResult
-} = require('express-validator');
+
 const usersRepo = require('../../repositories/users');
 const signupTemplate = require('../../views/admin/auth/signup');
 const signinTemplate = require('../../views/admin/auth/signin');
@@ -12,6 +10,9 @@ const {
     requireEmailExists,
     requireValidPasswordForUser
 } = require('./validators');
+const {
+    handleErrors
+} = require('./middlewares');
 
 const router = express.Router();
 
@@ -21,18 +22,11 @@ router.get('/signup', (req, res) => {
     }));
 });
 
-router.post("/signup", [requireEmail, requirePassword, requireConfirmPassword], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.send(signupTemplate({
-            req,
-            errors
-        }));
-    }
+router.post("/signup", [requireEmail, requirePassword, requireConfirmPassword], handleErrors(signupTemplate), async (req, res) => {
+
     const {
         email,
-        password,
-        confirmPassword
+        password
     } = req.body;
 
     // Create a user in our repo to represent this person
@@ -43,7 +37,7 @@ router.post("/signup", [requireEmail, requirePassword, requireConfirmPassword], 
 
     // Store the id of that user inside of the users cookie
     req.session.userId = user.id; // Added by cookie session
-    res.send('Done!');
+    res.redirect('/admin/products');
 });
 
 router.get('/signout', (req, res) => {
@@ -55,19 +49,10 @@ router.get('/signin', (req, res) => {
     res.send(signinTemplate({}));
 });
 
-router.post('/signin', [requireEmailExists, requireValidPasswordForUser], async (req, res) => {
+router.post('/signin', [requireEmailExists, requireValidPasswordForUser], handleErrors(signinTemplate), async (req, res) => {
     const {
         email
     } = req.body;
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.send(signinTemplate({
-            req,
-            errors
-        }));
-    }
 
     const user = await usersRepo.getOneBy({
         email
@@ -75,7 +60,7 @@ router.post('/signin', [requireEmailExists, requireValidPasswordForUser], async 
 
     req.session.userId = user.id; // Added by cookie session
 
-    res.send('You are signed in');
+    res.redirect('/admin/products');
 });
 
 module.exports = router;
